@@ -14,9 +14,11 @@ const eslintConfig = [
   {
     ignores: [
       "node_modules/**",
-      ".next/**",
+      // covers .next plus any alternate NEXT_DIST_DIR build output
+      ".next*/**",
       "out/**",
       "build/**",
+      ".audit/**",
       "next-env.d.ts",
     ],
   },

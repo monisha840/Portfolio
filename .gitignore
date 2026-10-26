@@ -1,21 +1,14 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
 
 # next.js
 /.next/
+# alternate NEXT_DIST_DIR build output
+/.next-*/
 /out/
+next-env.d.ts
 
 # production
 /build
@@ -30,12 +23,28 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env
 .env*
+!.env.example
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+
+# extracted source text (kept locally as the content source of truth)
+/.source
+
+# audit screenshots
+/.audit
+
+# local working material — source photos, exports and scratch captures,
+# kept on disk but out of the repo, same as /.source
+/.playwright-mcp
+/Screenshot*.png
+/skills-*.png
+/Monisha_SS.jpeg
+/Monisha_SS_AI_Engineering_Resume.pdf
+/Monisha_SS_Professional_Profile_and_All_Projects_Updated.docx
+/*Monochrome Editorial Portrait*.png

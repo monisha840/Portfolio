@@ -1,26 +1,539 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Design tokens — Monisha S.S. portfolio
+   Palette: Black #000000 · Burgundy #6D001A · White #FFFFFF
+   ============================================================ */
+@theme {
+  /* brand scale derived from the core burgundy #6D001A */
+  --color-burgundy-950: #260009;
+  --color-burgundy-900: #3d000e;
+  --color-burgundy-800: #520014;
+  --color-burgundy-700: #6d001a; /* core brand */
+  --color-burgundy-600: #8a0021;
+  --color-burgundy-500: #a8092f;
+  --color-burgundy-400: #c9173f;
+  --color-burgundy-300: #e3315a; /* accent text on black — AA */
+  --color-burgundy-200: #f2748f;
+  --color-burgundy-100: #ffd9e1;
+
+  /* neutrals */
+  --color-ink-950: #000000;
+  --color-ink-900: #050506;
+  --color-ink-850: #0a0a0c;
+  --color-ink-800: #101014;
+  --color-ink-700: #17171c;
+  --color-ink-600: #22222a;
+
+  --color-chalk: #ffffff;
+  --color-chalk-dim: #c9c9d1;
+  --color-chalk-mute: #8e8e99;
+  --color-chalk-faint: #5c5c66;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* fluid type scale */
+  --text-display: clamp(2.75rem, 11vw, 7.5rem);
+  --text-h1: clamp(2rem, 6.2vw, 4.25rem);
+  --text-h2: clamp(1.75rem, 4.4vw, 3rem);
+  --text-h3: clamp(1.25rem, 2.4vw, 1.75rem);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --rule: rgba(255, 255, 255, 0.09);
+  --rule-strong: rgba(255, 255, 255, 0.16);
+  --surface: rgba(255, 255, 255, 0.025);
+  /* gutter: never let a section touch the viewport edge */
+  --gutter: clamp(1rem, 5vw, 6rem);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  min-width: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  /* Anchor offset for the fixed navbar lives on the sections themselves
+     (`scroll-mt-24` in the Section component). Setting scroll-padding here too
+     would stack with it and drop anchored sections ~184px down the viewport. */
+  -webkit-text-size-adjust: 100%;
+  /* decorative glows and oversized type are allowed to bleed past the
+     viewport; clipping on <html> as well as <body> stops that bleed from
+     ever becoming a horizontal scrollbar. */
+  overflow-x: clip;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-burgundy-600);
+  color: #fff;
+}
+
+/* ---- focus: always visible, never clipped ---- */
+:focus-visible {
+  outline: 2px solid var(--color-burgundy-300);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---- utilities ---- */
+@utility shell {
+  width: 100%;
+  max-width: 88rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@utility rule-t {
+  border-top: 1px solid var(--rule);
+}
+
+/* hairline grid backdrop used behind the hero */
+@utility grid-backdrop {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-burgundy-300);
+}
+
+/* ---- motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-72px, -72px, 0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(9px);
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   Selected projects — submerged numerals + fluid title
+   ------------------------------------------------------------
+   Each row carries a giant index that is deliberately cropped by the
+   row's own hairline: roughly three quarters of the glyph stands above
+   the rule, the remainder continues underneath it and fades into the
+   page. Nothing here glows — the depth comes from gradients, clipping
+   and very small 3D rotations.
+   ============================================================ */
+
+.project-row {
+  /* glyph size, and the share of its box that hangs below the rule */
+  --n-size: clamp(5.5rem, 26vw, 10rem);
+  --n-sub: 0.27;
+  --n-box: calc(var(--n-size) * 0.78);
+  --n-drop: calc(var(--n-box) * var(--n-sub));
+  --n-cut: calc(100% - var(--n-sub) * 100%);
+
+  /* written once per frame by the row's pointer loop */
+  --p-hover: 0;
+  --p-mx: 0;
+  --p-my: 0;
+}
+
+/* the four-column composition needs room for a full-size illustration
+   beside the index; below this the row stacks instead */
+@media (min-width: 1280px) {
+  .project-row {
+    --n-size: clamp(8rem, 23vw, 21rem);
+  }
+}
+
+/* the surface the numeral sinks beneath */
+.project-row__rule {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 5;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* a slightly firmer stretch of rule directly under the glyph, so the
+   crop reads as a waterline rather than a cut */
+.project-row__rule::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: min(38%, 22rem);
+  background: linear-gradient(to right, var(--rule-strong), transparent);
+}
+
+.project-numeral-stage {
+  position: absolute;
+  left: 0;
+  bottom: calc(-1 * var(--n-drop));
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  height: calc(var(--n-box) * 1.35 + var(--n-drop));
+  overflow: hidden; /* the submerged tail can never reach the next project */
+  perspective: 1100px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.project-numeral {
+  position: relative;
+  display: block;
+  font-size: var(--n-size);
+  line-height: 0.78;
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  font-variant-numeric: tabular-nums;
+  transform-origin: 50% 100%; /* the waterline stays put while it tilts */
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--p-my) * -2.4deg))
+    rotateY(calc(var(--p-mx) * 4.5deg))
+    translate3d(0, calc(var(--p-hover) * -7px), calc(var(--p-hover) * 16px));
+}
+
+.project-numeral__layer {
+  display: block;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  /* opaque above the rule, then a faint continuation below it */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0 var(--n-cut),
+    rgba(0, 0, 0, 0.17) calc(var(--n-cut) + 0.6%),
+    rgba(0, 0, 0, 0.06) calc(var(--n-cut) + 9%),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0 var(--n-cut),
+    rgba(0, 0, 0, 0.17) calc(var(--n-cut) + 0.6%),
+    rgba(0, 0, 0, 0.06) calc(var(--n-cut) + 9%),
+    transparent 100%
+  );
+}
+
+.project-numeral__base {
+  background-image: linear-gradient(
+    to bottom,
+    #ffffff 6%,
+    #f4f4f7 40%,
+    #cccdd4 64%,
+    #7c7c86 84%,
+    #3b3b43 100%
+  );
+}
+
+/* restrained reflected light near the waterline, cross-faded on hover */
+.project-numeral__accent {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    to bottom,
+    transparent 52%,
+    rgba(227, 49, 90, 0.26) 76%,
+    rgba(168, 9, 47, 0.52) 95%
+  );
+  opacity: 0;
+  transition: opacity 520ms var(--ease-out-expo);
+}
+
+.project-row:hover .project-numeral__accent,
+.project-row:focus-within .project-numeral__accent {
+  opacity: 1;
+}
+
+/* reserves the glyph's footprint in the grid: a band at the foot of the
+   stacked layout, width only once the row becomes four columns */
+.project-numeral-space {
+  display: block;
+  height: calc(var(--n-box) - var(--n-drop));
+}
+
+@media (min-width: 1280px) {
+  .project-numeral-space {
+    height: 0;
+  }
+}
+
+/* ---- fluid title ---- */
+
+.project-row__link {
+  display: inline-block;
+  max-width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* one link, the whole row: the mockup and the arrow stay decorative, so
+   there is never a second tab stop competing with the title */
+.project-row__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+}
+
+.fluid-title {
+  display: block;
+  position: relative;
+  perspective: 620px;
+}
+
+.fluid-title__word {
+  display: inline-block;
+  white-space: nowrap;
+  transform-style: preserve-3d;
+}
+
+.fluid-title__word + .fluid-title__word {
+  margin-left: 0.26em;
+}
+
+.fluid-title__word--accent {
+  color: var(--color-burgundy-300);
+}
+
+.fluid-title__ch {
+  display: inline-block;
+  transform-origin: 50% 85%;
+}
+
+/* the mockup drifts up by a hair rather than scaling, so nothing in the
+   row shifts under the pointer */
+.project-preview {
+  transition: transform 600ms var(--ease-out-expo);
+}
+
+/* the shared mockup frame carries a burgundy drop shadow; against the
+   oversized index it reads as a glow, so the showcase rows drop it */
+.project-preview [role="img"] {
+  box-shadow: none;
+}
+
+@media (min-width: 1280px) {
+  .project-row:hover .project-preview {
+    transform: translateY(-4px);
+  }
+}
+
+.project-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border-radius: 999px;
+  border: 1px solid rgba(227, 49, 90, 0.3);
+  color: var(--color-burgundy-300);
+  transition:
+    transform 450ms var(--ease-out-expo),
+    border-color 450ms var(--ease-out-expo),
+    background-color 450ms var(--ease-out-expo);
+}
+
+@media (min-width: 1280px) {
+  .project-arrow {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.project-row:hover .project-arrow,
+.project-row:focus-within .project-arrow {
+  transform: translate3d(2px, -2px, 0);
+  border-color: var(--color-burgundy-400);
+  background-color: rgba(109, 0, 26, 0.3);
+}
+
+/* keyboard focus lands on the title; the row acknowledges it too */
+.project-row:focus-within {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.022),
+    transparent 70%
+  );
+}
+
+/* ---- touch and reduced motion ----
+   no pointer loop runs here, so the row answers a tap instead */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .project-numeral {
+    transform: none;
+    transition: transform 320ms var(--ease-out-expo);
+  }
+  .project-row:active .project-numeral {
+    transform: translate3d(0, -4px, 0);
+  }
+  .fluid-title__ch {
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   Hero
+   ------------------------------------------------------------
+   The composition is built from four planes — grid, signature
+   word, figure, copy — separated by contrast, occlusion and a
+   few pixels of pointer parallax. No blurred blooms: the only
+   light in the scene is the gradient on the type and the grade
+   on the portrait.
+   ============================================================ */
+
+/* the signature word, cut by the rule at the foot of the section —
+   the same waterline the project indices sink beneath */
+.hero-word {
+  display: block;
+  font-size: clamp(5rem, 15.4vw, 14.5rem);
+  line-height: 0.78;
+  letter-spacing: -0.055em;
+  margin-bottom: -0.21em;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.098) 44%,
+    rgba(255, 255, 255, 0.04) 78%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  will-change: transform;
+}
+
+/* ---- portrait ----
+   The plate is keyed: the studio backdrop is gone, so there is no lit grey
+   left to fade and no halo around her. All that remains is the foot, which
+   dissolves the bust above the word rather than ending it on a line.
+
+   The grade rides on the image. Her container sits at a negative z-index,
+   which makes it a stacking context, so a `mix-blend-mode` overlay would be
+   isolated and paint a rectangle over the page; a filter stays in the
+   pixels. `sepia` + `hue-rotate` pull the monochrome a few degrees toward
+   the page's burgundy so she is lit by the same light as everything else. */
+.hero-figure__plate {
+  --plate-foot: linear-gradient(to bottom, #000 62%, transparent 96%);
+  filter: brightness(0.94) contrast(1.06) sepia(0.14) hue-rotate(-16deg);
+  -webkit-mask-image: var(--plate-foot);
+  mask-image: var(--plate-foot);
+}
+
+/* ---- plate frame ----
+   A hairline niche she stands in and overflows. With the backdrop keyed
+   out there is nothing left to separate her from the page, and this does
+   it with structure instead of light: the top edge reads as a horizon, the
+   overlap at both sides reads as depth. */
+.hero-frame {
+  /* bled off the right edge of the frame, so only the top and left rules
+     are drawn — the other two are off-screen */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 0;
+  border-bottom: 0;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.01) 44%,
+    transparent 84%
+  );
+}
+
+/* crop marks: a burgundy tick along the top edge and down the left */
+.hero-frame::before,
+.hero-frame::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  background: var(--color-burgundy-400);
+}
+
+.hero-frame::before {
+  width: 32%;
+  height: 1px;
+  opacity: 0.6;
+}
+
+.hero-frame::after {
+  width: 1px;
+  height: 3.25rem;
+  opacity: 0.45;
+}
+
+/* ---- grain ----
+   Overlay blending keeps it off pure black, so it textures the
+   portrait, the word and the grid the way film would, and leaves the
+   page itself clean. */
+.hero-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23n)' opacity='0.46'/%3E%3C/svg%3E");
+  background-size: 150px 150px;
+  opacity: 0.72;
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-word,
+  .hero-figure {
+    transform: none !important;
+  }
 }
