@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Caveat, Geist, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -13,6 +13,14 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+});
+
+/* used for one thing only: the signature under the portrait */
+const signature = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["600"],
   display: "swap",
 });
 
@@ -108,10 +116,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    /* the font variables belong on <html>: `@theme` emits --font-sans and
+       friends on :root, and a custom property that references them resolves
+       where it is declared — on <body> they were never in scope, so every
+       one of those stacks fell through to the generic fallback */
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} ${signature.variable}`}
+    >
+      <body className="antialiased">
         <script
           type="application/ld+json"
           // JSON.stringify output of a local literal — no user input involved

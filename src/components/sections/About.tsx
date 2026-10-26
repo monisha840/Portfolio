@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Pill } from "@/components/ui/Pill";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
@@ -46,8 +47,35 @@ export function About() {
         </>
       }
     >
-      <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <div className="min-w-0 lg:col-span-7">
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-16 lg:gap-y-14">
+        {/* ---------- portrait ----------
+            First thing past the hero on a phone; the head of the right rail
+            from `lg`. The plate already carries its halo on pure black, so
+            it meets the page without a matte. */}
+        <Reveal className="order-first min-w-0 lg:order-none lg:col-span-5 lg:col-start-8 lg:row-start-1">
+          <figure className="min-w-0">
+            <div className="overflow-hidden rounded-xl border border-white/10">
+              <Image
+                src="/monisha-halo.webp"
+                alt="Monisha S.S."
+                width={1536}
+                height={1024}
+                sizes="(max-width: 1023px) 100vw, 34vw"
+                className="h-auto w-full object-cover"
+              />
+            </div>
+            <figcaption className="mt-5 flex flex-col items-start gap-1.5 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+              <span className="font-signature text-[2rem] leading-none text-burgundy-300 sm:text-[2.25rem]">
+                Monisha Sridhar
+              </span>
+              <span className="font-mono text-[10px] tracking-[0.2em] text-chalk-mute uppercase sm:pb-1">
+                {site.role}
+              </span>
+            </figcaption>
+          </figure>
+        </Reveal>
+
+        <div className="min-w-0 lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1">
           {paragraphs.map((copy, i) => (
             <Reveal
               key={i}
@@ -67,8 +95,11 @@ export function About() {
           ))}
         </div>
 
-        <Reveal className="min-w-0 lg:col-span-5" delay={0.16}>
-          <aside className="lg:border-l lg:border-white/10 lg:pl-10">
+        <Reveal
+          className="min-w-0 lg:col-span-5 lg:col-start-8 lg:row-start-2"
+          delay={0.16}
+        >
+          <aside>
             <h3 className="eyebrow">At a glance</h3>
             <dl className="mt-5">
               {facts.map((fact) => (

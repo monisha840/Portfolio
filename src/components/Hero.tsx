@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useRef } from "react";
 import { ArrowDown, ArrowUpRight, Download } from "lucide-react";
@@ -15,35 +14,18 @@ const SPECIALTIES = ["LLMs", "RAG", "Voice AI", "AI agents", "Automation"];
 const GRID_MASK =
   "radial-gradient(ellipse 72% 62% at 48% 40%, #000 18%, transparent 76%)";
 
-/** one definition for both plate instances: identical `src`, `srcset` and
-    `sizes` mean the browser only ever fetches one derivative */
-const PLATE_CLASS = "hero-figure__plate h-full w-full object-cover";
-const PLATE_ALT = "Monisha S.S., Generative AI Engineer";
-
-const plate = {
-  src: "/monisha-editorial.webp",
-  width: 1108,
-  height: 1419,
-  priority: true,
-  sizes: "(max-width: 767px) 44vw, (max-width: 1024px) 52vw, 46vw",
-} as const;
-
 /** parallax travel in px at full pointer deflection */
-const FIGURE_SHIFT = 9;
 const WORD_SHIFT = 16;
 
 export function Hero() {
   const reduce = useReducedMotion();
 
-  const figureRef = useRef<HTMLDivElement | null>(null);
   const wordRef = useRef<HTMLSpanElement | null>(null);
 
   /**
-   * Pointer parallax. The figure and the word travel in opposite
-   * directions by a few pixels, which is the whole depth cue — the planes
-   * separate as you move rather than sitting on one sheet of glass.
-   * Written straight to the DOM from one rAF loop; no React state, so a
-   * pointer move never costs a render.
+   * Pointer parallax on the signature word: a few pixels of travel against
+   * a static grid, which is what separates the two planes. Written straight
+   * to the DOM from one rAF loop, so a pointer move never costs a render.
    */
   const p = useRef({
     x: 0,
@@ -59,11 +41,6 @@ export function Hero() {
     s.cx += (s.x - s.cx) * 0.065;
     s.cy += (s.y - s.cy) * 0.065;
 
-    if (figureRef.current) {
-      figureRef.current.style.transform = `translate3d(${(
-        -s.cx * FIGURE_SHIFT
-      ).toFixed(2)}px,${(-s.cy * (FIGURE_SHIFT * 0.6)).toFixed(2)}px,0)`;
-    }
     if (wordRef.current) {
       wordRef.current.style.transform = `translate3d(${(
         s.cx * WORD_SHIFT
@@ -85,7 +62,6 @@ export function Hero() {
       if (s.raf) cancelAnimationFrame(s.raf);
       s.raf = 0;
       s.x = s.y = s.cx = s.cy = 0;
-      if (figureRef.current) figureRef.current.style.transform = "";
       if (wordRef.current) wordRef.current.style.transform = "";
     };
 
@@ -131,7 +107,7 @@ export function Hero() {
     <section
       id="home"
       aria-label="Introduction"
-      className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pb-16 pt-24 sm:pt-28 md:pb-24 lg:pb-28"
+      className="hero relative flex min-h-[100svh] flex-col justify-center overflow-hidden pb-16 pt-24 sm:pt-28"
     >
       {/* ---------- backdrop ----------
           A static grid and an atmospheric floor. Nothing here is blurred
@@ -163,28 +139,6 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* ---------- portrait ----------
-          One plate, placed twice: beside the intro on phones, and as a
-          full editorial column bled off the right of the frame from `md`.
-          Both instances carry the same `sizes`, so the browser fetches a
-          single derivative. The disc behind her is a flat grey shape, not
-          a light — see `.hero-disc`. */}
-      <motion.div
-        initial={reduce ? { opacity: 1 } : { opacity: 0, scale: 1.03 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: reduce ? 0 : 1.4, ease: EASE }}
-        className="pointer-events-none absolute -z-10 right-0 top-[13%] hidden aspect-[1108/1419] w-[52%] select-none md:block lg:w-[48%] xl:w-[44%] 2xl:w-[40%]"
-      >
-        <div ref={figureRef} className="hero-figure relative h-full w-full">
-          <span aria-hidden className="hero-disc" />
-          <Image
-            {...plate}
-            alt={PLATE_ALT}
-            className={`${PLATE_CLASS} object-[center_18%]`}
-          />
-        </div>
-      </motion.div>
-
       {/* film grain, over the image planes and under the copy */}
       <div
         aria-hidden
@@ -193,31 +147,12 @@ export function Hero() {
 
       {/* ---------- content ---------- */}
       <div className="shell relative">
-        <div className="relative max-w-xl md:max-w-[52%] lg:max-w-[34rem] xl:max-w-[40rem] 2xl:max-w-[44rem]">
-          {/* phones: the plate sits beside the intro rather than behind it,
-              anchored to the copy block so it always lines up with the
-              eyebrow no matter where the column lands vertically */}
-          <motion.div
-            initial={reduce ? { opacity: 1 } : { opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: reduce ? 0 : 1.2, ease: EASE }}
-            className="pointer-events-none float-right mb-3 ml-5 w-[38%] max-w-[10.5rem] select-none md:hidden"
-          >
-            <div className="hero-figure relative aspect-square w-full">
-              <span aria-hidden className="hero-disc" />
-              <Image
-                {...plate}
-                alt={PLATE_ALT}
-                className={`${PLATE_CLASS} object-[center_10%]`}
-              />
-            </div>
-          </motion.div>
-
+        <div className="relative max-w-3xl lg:max-w-4xl xl:max-w-5xl">
           <motion.p
             {...rise(0.05)}
-            className="eyebrow mb-5 flex items-center gap-3 max-sm:tracking-[0.13em]"
+            className="eyebrow mb-6 flex items-center gap-3 sm:text-[0.75rem]"
           >
-            <span aria-hidden className="hidden h-px w-8 bg-burgundy-400/70 sm:block" />
+            <span aria-hidden className="h-px w-8 bg-burgundy-400/70 sm:w-10" />
             {site.role}
           </motion.p>
 
@@ -226,7 +161,7 @@ export function Hero() {
           <motion.p
             {...rise(0.12)}
             className="font-semibold leading-tight tracking-[-0.02em] text-chalk"
-            style={{ fontSize: "clamp(1.375rem, 2.1vw, 1.875rem)" }}
+            style={{ fontSize: "clamp(1.625rem, 2.8vw, 2.5rem)" }}
           >
             Monisha <span className="text-burgundy-300">S.S.</span>
           </motion.p>
@@ -235,7 +170,7 @@ export function Hero() {
           <motion.h1
             {...rise(0.2)}
             className="mt-4 text-balance font-semibold leading-[1.06] tracking-[-0.035em] text-chalk sm:mt-5"
-            style={{ fontSize: "clamp(2rem, 4.05vw, 3.5rem)" }}
+            style={{ fontSize: "clamp(2.5rem, 6.4vw, 5.5rem)" }}
           >
             <span>I build AI systems</span>{" "}
             {/* the break lands on the clause rather than stranding "that" */}
@@ -247,7 +182,7 @@ export function Hero() {
 
           <motion.p
             {...rise(0.28)}
-            className="mt-5 max-w-lg text-pretty text-[0.9375rem] leading-relaxed text-chalk-dim sm:mt-6 sm:text-base"
+            className="mt-6 max-w-2xl text-pretty text-[1.0625rem] leading-relaxed text-chalk-dim sm:mt-7 sm:text-xl"
           >
             LLM applications, voice agents and speech pipelines — and the
             engineering that puts them into production.
@@ -257,7 +192,7 @@ export function Hero() {
           <motion.ul
             {...rise(0.36)}
             aria-label="Technical specialties"
-            className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-chalk-mute sm:gap-x-3 sm:text-[11px] sm:tracking-[0.18em]"
+            className="mt-8 flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em] text-chalk-mute sm:gap-x-4 sm:text-[12.5px] sm:tracking-[0.18em]"
           >
             {SPECIALTIES.map((item, i) => (
               /* the separator trails its item, so a wrap never leaves an

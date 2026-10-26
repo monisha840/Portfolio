@@ -32,6 +32,7 @@
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-signature: var(--font-caveat), ui-rounded, cursive;
 
   /* fluid type scale */
   --text-display: clamp(2.75rem, 11vw, 7.5rem);
@@ -441,11 +442,24 @@ body {
    on the portrait.
    ============================================================ */
 
+/* The signature word's size also sets the hero's foot padding, so the copy
+   clears it however the clamp resolves — the two used to be tuned apart and
+   collided once the headline grew. */
+.hero {
+  --hero-word: clamp(5rem, 15.4vw, 14.5rem);
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding-bottom: calc(var(--hero-word) * 0.62 + 2.5rem);
+  }
+}
+
 /* the signature word, cut by the rule at the foot of the section —
    the same waterline the project indices sink beneath */
 .hero-word {
   display: block;
-  font-size: clamp(5rem, 15.4vw, 14.5rem);
+  font-size: var(--hero-word);
   line-height: 0.78;
   letter-spacing: -0.055em;
   margin-bottom: -0.21em;
