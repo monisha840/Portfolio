@@ -85,9 +85,8 @@ export function Contact() {
         <Reveal delay={0.08}>
           <p className="mt-7 max-w-2xl text-pretty text-base leading-relaxed text-chalk-dim sm:text-lg">
             I build LLM applications, retrieval pipelines, voice agents and
-            automation that run in production — not in a notebook. If your team
-            is shipping something in that territory, send me the problem and I
-            will tell you honestly whether I can build it.
+            automation that run in production. Send me the problem and I will
+            tell you honestly whether I can build it.
           </p>
         </Reveal>
 

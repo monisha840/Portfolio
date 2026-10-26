@@ -4,9 +4,9 @@ import { Section } from "@/components/ui/Section";
 import { site } from "@/lib/site";
 
 const paragraphs = [
-  "I'm an AI automation and full-stack developer at Sirah Digital in Chennai, building AI-enabled SaaS products for real clients — voice agents, creative automation, CRM and healthcare workflows. Most of them start in the same place: a business process that should be automated, and a model that only becomes useful once it's wired into the data, the tools and the failure cases around it.",
-  "In practice that means backend engineering. Designing PostgreSQL schemas, migrations and multi-tenant data models with role-based access; building REST and WebSocket APIs on Node.js, Fastify and Express; integrating LLM APIs, structured outputs, retrieval-based knowledge workflows and speech services; and keeping the asynchronous half — webhooks, queues, scheduled jobs, retries — honest about what happens when a third-party service goes quiet.",
-  "I work across the whole lifecycle rather than handing it off at the edges: requirements and planning, UI and backend, Playwright end-to-end tests, Docker deployments to Vercel and a VPS, then the debugging and production support that follow a launch. I'd rather ship something that still behaves three weeks after the demo than add another model to the stack.",
+  "I'm an AI automation and full-stack developer at Sirah Digital in Chennai, building AI-enabled SaaS for real clients. A model only earns its place once it's wired into the data, the tools and the failure cases around it.",
+  "Mostly that is backend work: PostgreSQL schemas and multi-tenant data models, REST and WebSocket APIs on Node.js and Fastify, LLM and speech integrations, and the webhooks, queues and retries that decide what happens when a provider goes quiet.",
+  "I work the whole lifecycle — requirements, UI, backend, Playwright end-to-end tests, Docker deployments — then the production support that follows a launch. I'd rather ship something that still behaves three weeks after the demo.",
 ];
 
 const facts = [

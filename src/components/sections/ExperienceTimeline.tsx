@@ -14,7 +14,7 @@ export function ExperienceTimeline() {
           <span className="text-burgundy-300">Sirah Digital</span>.
         </>
       }
-      lede="One role, deliberately broad: AI-enabled SaaS applications, conversational voice agents and business automation — owned from requirements and schema design through deployment and production support."
+      lede="One role, deliberately broad — owned from requirements and schema design through deployment and production support."
     >
       <div className="grid gap-y-14 lg:grid-cols-12 lg:gap-x-16">
         <div className="min-w-0 lg:col-span-8">

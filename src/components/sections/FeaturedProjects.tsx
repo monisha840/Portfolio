@@ -15,7 +15,7 @@ export function FeaturedProjects() {
           <span className="text-burgundy-300">demos</span>.
         </>
       }
-      lede="Nine builds across conversational voice AI, generative creative automation, assessment and reporting, healthcare operations and manufacturing. Each entry claims only what the project actually does — no invented metrics, and every interface composition here is an illustration rather than a screenshot."
+      lede="Nine builds across voice AI, generative automation, assessment, healthcare operations and manufacturing. Every interface shown here is an illustration, not a screenshot."
     >
       <div className="min-w-0 space-y-20 sm:space-y-24">
         {/* ------------------------------- 01–06 · submerged-index rows */}
@@ -32,8 +32,8 @@ export function FeaturedProjects() {
           <Reveal className="max-w-2xl">
             <p className="eyebrow">Also built · in progress</p>
             <p className="mt-4 text-pretty text-base leading-relaxed text-chalk-dim">
-              Two content-managed corporate websites, and one product direction
-              still being worked out in the open.
+              Two content-managed corporate sites, and one product direction
+              still in the open.
             </p>
           </Reveal>
 

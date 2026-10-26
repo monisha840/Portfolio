@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { ProjectMockup } from "@/components/ProjectMockup";
 import { Pill } from "@/components/ui/Pill";
+import { firstSentence } from "@/lib/text";
 import type { Project } from "@/lib/types";
 
 /* ------------------------------------------------------------------
@@ -36,20 +37,6 @@ const MAX_STACK = 5;
 
 const clamp = (v: number, min: number, max: number) =>
   v < min ? min : v > max ? max : v;
-
-/**
- * The opening sentence of the summary, used as the row's lede.
- * Full summaries stay on the case-study pages; a row only ever shows the
- * first sentence (plus the second when the first is very short), so the
- * three columns never turn into a wall of text.
- */
-function lede(summary: string): string {
-  const parts = summary.match(/[^.]+\.(?:\s|$)/g);
-  if (!parts || parts.length === 0) return summary;
-  const first = parts[0].trim();
-  if (first.length < 72 && parts[1]) return `${first} ${parts[1].trim()}`;
-  return first;
-}
 
 /** Words, each split into characters. The last word carries the accent. */
 function splitTitle(title: string) {
@@ -337,7 +324,7 @@ export function ProjectShowcaseRow({
           </h3>
 
           <p className="mt-3.5 max-w-[46ch] text-pretty text-[14.5px] leading-relaxed text-chalk-dim">
-            {lede(project.summary)}
+            {firstSentence(project.summary)}
           </p>
 
           <ul className="mt-5 flex min-w-0 flex-wrap gap-1.5">

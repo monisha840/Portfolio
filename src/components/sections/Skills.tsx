@@ -91,7 +91,7 @@ export function Skills() {
           <span className="text-burgundy-300">areas of experience</span>.
         </>
       }
-      lede="Grouped by what they do rather than ranked. Depth varies across this list — some of it I work in every day, some of it I have shipped once and would reach for again."
+      lede="Grouped by what they do, not ranked. Some I work in daily; some I have shipped once and would reach for again."
     >
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-12 sm:gap-4">
         {/* ---------------------------------------------- 01 capabilities */}
@@ -99,7 +99,7 @@ export function Skills() {
           <Panel
             index={1}
             title="AI engineering"
-            blurb="Where the AI work actually lands. Each meter marks the projects on this site that use the capability — applied use, not a proficiency score."
+            blurb="Each meter marks the projects here that use the capability — applied use, not a proficiency score."
             count={capabilities.length}
             className="h-full"
           >

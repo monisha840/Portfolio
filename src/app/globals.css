@@ -479,45 +479,33 @@ body {
   mask-image: var(--plate-foot);
 }
 
-/* ---- plate frame ----
-   A hairline niche she stands in and overflows. With the backdrop keyed
-   out there is nothing left to separate her from the page, and this does
-   it with structure instead of light: the top edge reads as a horizon, the
-   overlap at both sides reads as depth. */
-.hero-frame {
-  /* bled off the right edge of the frame, so only the top and left rules
-     are drawn — the other two are off-screen */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-right: 0;
-  border-bottom: 0;
+/* ---- the disc ----
+   A flat grey circle behind the figure. It is a shape, not a light: hard
+   edge, no blur, so it separates her from the page the way a studio
+   backdrop would without reintroducing a halo. */
+.hero-disc {
+  position: absolute;
+  left: 50%;
+  top: 31%;
+  width: 66%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
   background-image: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.01) 44%,
-    transparent 84%
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.045)
   );
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
 }
 
-/* crop marks: a burgundy tick along the top edge and down the left */
-.hero-frame::before,
-.hero-frame::after {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: -1px;
-  background: var(--color-burgundy-400);
-}
-
-.hero-frame::before {
-  width: 32%;
-  height: 1px;
-  opacity: 0.6;
-}
-
-.hero-frame::after {
-  width: 1px;
-  height: 3.25rem;
-  opacity: 0.45;
+/* on phones the plate is a square crop, so the disc sits higher and
+   wider to stay behind her head and shoulders */
+@media (max-width: 767px) {
+  .hero-disc {
+    top: 42%;
+    width: 92%;
+  }
 }
 
 /* ---- grain ----

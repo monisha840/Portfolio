@@ -15,6 +15,19 @@ const SPECIALTIES = ["LLMs", "RAG", "Voice AI", "AI agents", "Automation"];
 const GRID_MASK =
   "radial-gradient(ellipse 72% 62% at 48% 40%, #000 18%, transparent 76%)";
 
+/** one definition for both plate instances: identical `src`, `srcset` and
+    `sizes` mean the browser only ever fetches one derivative */
+const PLATE_CLASS = "hero-figure__plate h-full w-full object-cover";
+const PLATE_ALT = "Monisha S.S., Generative AI Engineer";
+
+const plate = {
+  src: "/monisha-editorial.webp",
+  width: 1108,
+  height: 1419,
+  priority: true,
+  sizes: "(max-width: 767px) 44vw, (max-width: 1024px) 52vw, 46vw",
+} as const;
+
 /** parallax travel in px at full pointer deflection */
 const FIGURE_SHIFT = 9;
 const WORD_SHIFT = 16;
@@ -118,7 +131,7 @@ export function Hero() {
     <section
       id="home"
       aria-label="Introduction"
-      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-12 pt-24 sm:pb-16 sm:pt-28 md:justify-center md:pb-24 md:pt-24 lg:pb-28"
+      className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pb-16 pt-24 sm:pt-28 md:pb-24 lg:pb-28"
     >
       {/* ---------- backdrop ----------
           A static grid and an atmospheric floor. Nothing here is blurred
@@ -150,31 +163,24 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* the niche she stands in — see `.hero-frame` */}
-      <div
-        aria-hidden
-        className="hero-frame pointer-events-none absolute -z-[15] bottom-0 right-0 top-[11%] hidden w-[32%] md:block lg:w-[30%] xl:w-[28%]"
-      />
-
       {/* ---------- portrait ----------
-          A full-height editorial column. Phones get a cropped band above
-          the copy; from `md` it is a plate bled off the right edge of the
-          frame, pushed below the navbar and cropped by the fold. */}
+          One plate, placed twice: beside the intro on phones, and as a
+          full editorial column bled off the right of the frame from `md`.
+          Both instances carry the same `sizes`, so the browser fetches a
+          single derivative. The disc behind her is a flat grey shape, not
+          a light — see `.hero-disc`. */}
       <motion.div
         initial={reduce ? { opacity: 1 } : { opacity: 0, scale: 1.03 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: reduce ? 0 : 1.4, ease: EASE }}
-        className="pointer-events-none absolute -z-10 right-0 top-0 h-[48vh] w-[86%] max-w-[23rem] select-none sm:h-[52vh] sm:w-[66%] sm:max-w-[27rem] md:top-[13%] md:h-auto md:w-[52%] md:max-w-none md:aspect-[1108/1419] lg:w-[48%] xl:w-[44%] 2xl:w-[40%]"
+        className="pointer-events-none absolute -z-10 right-0 top-[13%] hidden aspect-[1108/1419] w-[52%] select-none md:block lg:w-[48%] xl:w-[44%] 2xl:w-[40%]"
       >
-        <div ref={figureRef} className="hero-figure h-full w-full">
+        <div ref={figureRef} className="hero-figure relative h-full w-full">
+          <span aria-hidden className="hero-disc" />
           <Image
-            src="/monisha-editorial.webp"
-            alt="Monisha S.S., Generative AI Engineer"
-            width={1108}
-            height={1419}
-            priority
-            sizes="(max-width: 640px) 86vw, (max-width: 1024px) 50vw, 46vw"
-            className="hero-figure__plate h-full w-full object-cover object-[center_18%] opacity-88 sm:opacity-95 md:opacity-100"
+            {...plate}
+            alt={PLATE_ALT}
+            className={`${PLATE_CLASS} object-[center_18%]`}
           />
         </div>
       </motion.div>
@@ -185,20 +191,33 @@ export function Hero() {
         className="hero-grain pointer-events-none absolute inset-0 -z-[6] hidden md:block"
       />
 
-      {/* keeps copy legible where the portrait sits behind it on small screens */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-[5] bg-gradient-to-t from-black via-black/90 to-black/30 md:hidden"
-      />
-
       {/* ---------- content ---------- */}
       <div className="shell relative">
-        <div className="max-w-xl md:max-w-[52%] lg:max-w-[34rem] xl:max-w-[40rem] 2xl:max-w-[44rem]">
+        <div className="relative max-w-xl md:max-w-[52%] lg:max-w-[34rem] xl:max-w-[40rem] 2xl:max-w-[44rem]">
+          {/* phones: the plate sits beside the intro rather than behind it,
+              anchored to the copy block so it always lines up with the
+              eyebrow no matter where the column lands vertically */}
+          <motion.div
+            initial={reduce ? { opacity: 1 } : { opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: reduce ? 0 : 1.2, ease: EASE }}
+            className="pointer-events-none float-right mb-3 ml-5 w-[38%] max-w-[10.5rem] select-none md:hidden"
+          >
+            <div className="hero-figure relative aspect-square w-full">
+              <span aria-hidden className="hero-disc" />
+              <Image
+                {...plate}
+                alt={PLATE_ALT}
+                className={`${PLATE_CLASS} object-[center_10%]`}
+              />
+            </div>
+          </motion.div>
+
           <motion.p
             {...rise(0.05)}
-            className="eyebrow mb-5 flex items-center gap-3"
+            className="eyebrow mb-5 flex items-center gap-3 max-sm:tracking-[0.13em]"
           >
-            <span aria-hidden className="h-px w-8 bg-burgundy-400/70" />
+            <span aria-hidden className="hidden h-px w-8 bg-burgundy-400/70 sm:block" />
             {site.role}
           </motion.p>
 
@@ -230,9 +249,8 @@ export function Hero() {
             {...rise(0.28)}
             className="mt-5 max-w-lg text-pretty text-[0.9375rem] leading-relaxed text-chalk-dim sm:mt-6 sm:text-base"
           >
-            LLM applications, voice agents and speech pipelines, and the
-            automation and full-stack engineering that puts them into
-            production.
+            LLM applications, voice agents and speech pipelines — and the
+            engineering that puts them into production.
           </motion.p>
 
           {/* technical identity */}

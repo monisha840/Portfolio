@@ -4,6 +4,7 @@ import { ProjectMockup } from "@/components/ProjectMockup";
 import { ButtonLink } from "@/components/ui/Button";
 import { Pill } from "@/components/ui/Pill";
 import { Reveal } from "@/components/ui/Reveal";
+import { firstSentence } from "@/lib/text";
 import type { Project, ProjectStatus } from "@/lib/types";
 
 type Variant = "flagship" | "row" | "compact";
@@ -199,7 +200,7 @@ function Compact({
           {project.kicker}
         </p>
         <p className="mt-4 text-pretty text-sm leading-relaxed text-chalk-mute">
-          {project.summary}
+          {firstSentence(project.summary)}
         </p>
 
         <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-1.5">
